@@ -1,8 +1,8 @@
 package baseBlockchain
 
-// 计算块散列
+// 计算块工作证明
 import (
-	"bolckchin/tools"
+	"blockchain/tools"
 	"bytes"
 	"crypto/sha256"
 	"fmt"
@@ -18,13 +18,13 @@ var (
 // 目标比特
 const targetBits = 24
 
-// 散列
+// 工作证明
 type ProofOfWork struct {
 	block  *Block
 	target *big.Int
 }
 
-// 创建并返回一个散列
+// 创建并返回一个工作证明
 func NewProofOfWork(b *Block) *ProofOfWork {
 	target := big.NewInt(1)
 	target.Lsh(target, uint(256-targetBits))
@@ -50,7 +50,7 @@ func (pow *ProofOfWork) prepareData(nonce int) []byte {
 	return data
 }
 
-// 执行一个散列
+// 执行一个工作证明
 func (pow *ProofOfWork) Run() (int, []byte) {
 	var hashInt big.Int
 	var hash [32]byte
@@ -75,7 +75,7 @@ func (pow *ProofOfWork) Run() (int, []byte) {
 	return nonce, hash[:]
 }
 
-// 验证散列是否有效
+// 验证工作证明是否有效
 func (pow *ProofOfWork) Validate() bool {
 	var hashInt big.Int
 

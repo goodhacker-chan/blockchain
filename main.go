@@ -1,7 +1,7 @@
 package main
 
 import (
-	"bolckchin/baseBlockchain"
+	"blockchain/baseBlockchain"
 	"fmt"
 	"strconv"
 )
@@ -20,7 +20,7 @@ func BaseBlockchain() {
 		fmt.Printf("Data: %s\n", block.Data)
 		fmt.Printf("Hash: %x\n", block.Hash)
 		// 计算散列
-		pow := baseBlockchain.NewProofOfWork(block);
+		pow := baseBlockchain.NewProofOfWork(block)
 		fmt.Printf("PoW: %s\n", strconv.FormatBool(pow.Validate()))
 		fmt.Println()
 	}
