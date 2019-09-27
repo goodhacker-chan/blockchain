@@ -15,8 +15,9 @@ var (
 	maxNonce = math.MaxInt64
 )
 
-// 目标比特
-const targetBits = 24
+// 目标比特(任意数字, 值越大挖掘难度越高)
+//const targetBits = 24
+const targetBits = 2
 
 // 工作证明
 type ProofOfWork struct {
@@ -24,7 +25,7 @@ type ProofOfWork struct {
 	target *big.Int
 }
 
-// 创建并返回一个工作证明
+// 创建并返回一个工作证明并返回
 func NewProofOfWork(b *Block) *ProofOfWork {
 	target := big.NewInt(1)
 	target.Lsh(target, uint(256-targetBits))
@@ -39,7 +40,7 @@ func (pow *ProofOfWork) prepareData(nonce int) []byte {
 	data := bytes.Join(
 		[][]byte{
 			pow.block.PrevBlockHash,
-			pow.block.Data,
+			pow.block.HashTransactions(),
 			tools.IntToHex(pow.block.Timestamp),
 			tools.IntToHex(int64(targetBits)),
 			tools.IntToHex(int64(nonce)),
@@ -56,7 +57,7 @@ func (pow *ProofOfWork) Run() (int, []byte) {
 	var hash [32]byte
 	nonce := 0
 
-	fmt.Printf("区块包含 \"%s\"\n", pow.block.Data)
+	fmt.Printf("计算新区块")
 	for nonce < maxNonce {
 		data := pow.prepareData(nonce)
 

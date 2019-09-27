@@ -5,14 +5,13 @@ import (
 	"crypto/sha256"
 	"encoding/gob"
 	"log"
-	"strconv"
 	"time"
 )
 
 // 块结构
 type Block struct {
 	Timestamp     int64  // 创建时间戳
-	Data          []byte // 区块中包含的实际信息
+	Transactions  []*Transaction	// 交易事务
 	PrevBlockHash []byte // 前一个块的哈希
 	Hash          []byte // 当前块的哈希
 	Nonce         int    // 块计数器
@@ -31,19 +30,22 @@ func (b *Block) Serialize() []byte {
 	return result.Bytes()
 }
 
+// 返回块中事务的hash
+func (b *Block) HashTransactions() []byte {
+	var txHashes [][]byte
+	var txHash [32]byte
 
-// 设置哈希
-func (b *Block) SetHash() {
-	timestamp := []byte(strconv.FormatInt(b.Timestamp, 10))
-	headers := bytes.Join([][]byte{b.PrevBlockHash, b.Data, timestamp}, []byte{})
-	hash := sha256.Sum256(headers)
+	for _, tx := range b.Transactions {
+		txHashes = append(txHashes, tx.ID)
+	}
+	txHash = sha256.Sum256(bytes.Join(txHashes, []byte{}))
 
-	b.Hash = hash[:]
+	return txHash[:]
 }
 
 // 创建块
-func NewBlock(data string, prevBlockHash []byte) *Block {
-	block := &Block{time.Now().Unix(), []byte(data), prevBlockHash, []byte{}, 0}
+func NewBlock(transactions []*Transaction, prevBlockHash []byte) *Block {
+	block := &Block{time.Now().Unix(), transactions, prevBlockHash, []byte{}, 0}
 	//block.SetHash()
 	pow := NewProofOfWork(block)
 	nonce, hash := pow.Run()
@@ -53,9 +55,9 @@ func NewBlock(data string, prevBlockHash []byte) *Block {
 	return block
 }
 
-// 成因地块初始化链
-func NewGenesisBlock() *Block {
-	return NewBlock("Genesis Block", []byte{})
+// 起源块初始化链
+func NewGenesisBlock(coinbase *Transaction) *Block {
+	return NewBlock([]*Transaction{coinbase}, []byte{})
 }
 
 // 反序列化一个块
