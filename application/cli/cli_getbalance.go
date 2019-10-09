@@ -10,7 +10,7 @@ import (
 // 创建钱包地址
 func (cli *CLI) getBalance(address string) {
 	if !baseBlockchain.ValidateAddress(address) {
-		log.Panic("错误: 地址无效")
+		log.Panic("错误: 钱包地址无效")
 	}
 	bc := baseBlockchain.NewBlockchain(address)
 	defer bc.DB.Close()
@@ -24,5 +24,5 @@ func (cli *CLI) getBalance(address string) {
 		balance += out.Value
 	}
 
-	fmt.Printf("地址余额 '%s': %d\n", address, balance)
+	fmt.Printf("钱包地址余额 '%s': %d\n", address, balance)
 }
