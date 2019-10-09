@@ -1,7 +1,7 @@
 package main
 
 import (
-	"blockchain/application"
+	"bolckchain/application/cli"
 )
 
 func main() {
@@ -10,6 +10,6 @@ func main() {
 
 // 基础区块实例
 func BaseBlockchain() {
-	cli := application.CLI{}
+	cli := cli.CLI{}
 	cli.Run()
 }

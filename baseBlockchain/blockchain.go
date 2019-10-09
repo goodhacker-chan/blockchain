@@ -2,13 +2,14 @@ package baseBlockchain
 
 import (
 	"bytes"
+	"crypto/ecdsa"
 	"encoding/hex"
 	"errors"
 	"fmt"
 	"log"
 	"os"
 
-	"github.com/boltDB/bolt"
+	"bolckchain/src/github.com/boltDB/bolt"
 )
 
 // 保存的数据库文件名配置
@@ -263,6 +264,21 @@ func (bc *Blockchain) MineBlock(transactions []*Transaction) {
 	}
 }
 
+// 标记事务的输出
+func (bc *Blockchain) SignTransaction(tx *Transaction, privKey ecdsa.PrivateKey) {
+	prevTXs := make(map[string]Transaction)
+
+	for _, vin := range tx.Vin {
+		prevTX, err := bc.FindTransaction(vin.Txid)
+		if err != nil {
+			log.Panic(err)
+		}
+		prevTXs[hex.EncodeToString(prevTX.ID)] = prevTX
+	}
+
+	tx.Sign(privKey, prevTXs)
+}
+
 // 验证一个事务是否有效
 func (bc *Blockchain) VerifyTransaction(tx *Transaction) bool {
 	prevTXs := make(map[string]Transaction)
@@ -285,4 +301,25 @@ func dbExists() bool {
 	}
 
 	return true
+}
+
+// 迭代器从开始位置获取
+func (i *BlockchainIterator) Next() *Block {
+	var block *Block
+
+	err := i.DB.View(func(tx *bolt.Tx) error {
+		b := tx.Bucket([]byte(blocksBucket))
+		encodedBlock := b.Get(i.currentHash)
+		block = DeserializeBlock(encodedBlock)
+
+		return nil
+	})
+
+	if err != nil {
+		log.Panic(err)
+	}
+
+	i.currentHash = block.PrevBlockHash
+
+	return block
 }

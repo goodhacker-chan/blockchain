@@ -2,7 +2,7 @@ package baseBlockchain
 
 // 计算块工作证明
 import (
-	"blockchain/tools"
+	"bolckchain/tools"
 	"bytes"
 	"crypto/sha256"
 	"fmt"
