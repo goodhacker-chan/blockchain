@@ -1,7 +1,7 @@
 package cli
 
 import (
-	"bolckchain/baseBlockchain"
+	"blockchain/baseBlockchain"
 	"fmt"
 	"strconv"
 )

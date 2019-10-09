@@ -9,12 +9,13 @@ import (
 	"log"
 	"os"
 
-	"bolckchain/src/github.com/boltDB/bolt"
+	"github.com/boltDB/bolt"
 )
 
 // 保存的数据库文件名配置
 const DBFile = "blockchain.DB"
 const blocksBucket = "blocks"
+
 // 起源块默认金币数据
 const genesisCoinbaseData = "The Times 03/Jan/2009 Chancellor on brink of second bailout for banks"
 

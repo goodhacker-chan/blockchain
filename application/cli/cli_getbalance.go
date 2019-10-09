@@ -1,8 +1,8 @@
 package cli
 
 import (
-	"bolckchain/baseBlockchain"
-	"bolckchain/tools"
+	"blockchain/baseBlockchain"
+	"blockchain/tools"
 	"fmt"
 	"log"
 )

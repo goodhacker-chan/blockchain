@@ -1,7 +1,7 @@
 package main
 
 import (
-	"bolckchain/application/cli"
+	"blockchain/application/cli"
 )
 
 func main() {
