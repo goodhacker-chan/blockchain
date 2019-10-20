@@ -2,7 +2,6 @@ package baseBlockchain
 
 import (
 	"bytes"
-	"crypto/sha256"
 	"encoding/gob"
 	"log"
 	"time"
@@ -23,6 +22,7 @@ func NewBlock(transactions []*Transaction, prevBlockHash []byte) *Block {
 	//block.SetHash()
 	pow := NewProofOfWork(block)
 	nonce, hash := pow.Run()
+
 	block.Hash = hash[:]
 	block.Nonce = nonce
 
@@ -36,15 +36,14 @@ func NewGenesisBlock(coinbase *Transaction) *Block {
 
 // 返回块中事务的hash
 func (b *Block) HashTransactions() []byte {
-	var txHashes [][]byte
-	var txHash [32]byte
+	var transactions [][]byte
 
 	for _, tx := range b.Transactions {
-		txHashes = append(txHashes, tx.ID)
+		transactions = append(txHashes, tx.Serialize())
 	}
-	txHash = sha256.Sum256(bytes.Join(txHashes, []byte{}))
+	mTree := NewMerkleTree(transactions)
 
-	return txHash[:]
+	return mTree.RootNode.Data
 }
 
 // 序列化块
