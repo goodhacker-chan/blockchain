@@ -8,7 +8,7 @@ import (
 
 // 打印链
 func (cli *CLI) printChain() {
-	bc := baseBlockchain.NewBlockchain("")
+	bc := baseBlockchain.NewBlockchain()
 	defer bc.DB.Close()
 
 	bci := bc.Iterator()

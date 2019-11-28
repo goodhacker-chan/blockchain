@@ -134,10 +134,8 @@ Work:
 // 根据id查找事务
 func (bc *Blockchain) FindTransaction(ID []byte) (Transaction, error) {
 	bci := bc.Iterator()
-
 	for {
 		block := bci.Next()
-
 		for _, tx := range block.Transactions {
 			if bytes.Compare(tx.ID, ID) == 0 {
 				return *tx, nil
@@ -250,7 +248,7 @@ func (bc *Blockchain) Iterator() *BlockchainIterator {
 }
 
 // 使用提供的事务挖掘一个块
-func (bc *Blockchain) MineBlock(transactions []*Transaction) {
+func (bc *Blockchain) MineBlock(transactions []*Transaction) *Block {
 	var lastHash []byte
 
 	for _, tx := range transactions {
@@ -265,7 +263,6 @@ func (bc *Blockchain) MineBlock(transactions []*Transaction) {
 
 		return nil
 	})
-
 	if err != nil {
 		log.Panic(err)
 	}
@@ -313,7 +310,6 @@ func (bc *Blockchain) SignTransaction(tx *Transaction, privKey ecdsa.PrivateKey)
 // 验证一个事务是否有效
 func (bc *Blockchain) VerifyTransaction(tx *Transaction) bool {
 	prevTXs := make(map[string]Transaction)
-
 	for _, vin := range tx.Vin {
 		prevTX, err := bc.FindTransaction(vin.Txid)
 		if err != nil {

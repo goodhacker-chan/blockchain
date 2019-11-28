@@ -12,13 +12,14 @@ func (cli *CLI) getBalance(address string) {
 	if !baseBlockchain.ValidateAddress(address) {
 		log.Panic("错误: 钱包地址无效")
 	}
-	bc := baseBlockchain.NewBlockchain(address)
+	bc := baseBlockchain.NewBlockchain()
+	UTXOSet := baseBlockchain.UTXOSet{bc}
 	defer bc.DB.Close()
 
 	balance := 0
 	pubKeyHash := tools.Base58Decode([]byte(address))
 	pubKeyHash = pubKeyHash[1 : len(pubKeyHash)-4]
-	UTXOs := bc.FindUTXO(pubKeyHash)
+	UTXOs := UTXOSet.FindUTXO(pubKeyHash)
 
 	for _, out := range UTXOs {
 		balance += out.Value

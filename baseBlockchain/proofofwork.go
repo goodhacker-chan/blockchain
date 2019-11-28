@@ -17,7 +17,7 @@ var (
 
 // 目标比特(任意数字, 值越大挖掘难度越高)
 //const targetBits = 24
-const targetBits = 2
+const targetBits = 18
 
 // 工作证明
 type ProofOfWork struct {
