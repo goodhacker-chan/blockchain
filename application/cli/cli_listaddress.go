@@ -1,14 +1,14 @@
 package cli
 
 import (
-	"blockchain/baseBlockchain"
+	"blockchain/base"
 	"fmt"
 	"log"
 )
 
 // 地址列表
-func (cli *CLI) listAddresses() {
-	wallets, err := baseBlockchain.NewWallets()
+func (cli *CLI) listAddresses(nodeID string) {
+	wallets, err := base.NewWallets(nodeID)
 	if err != nil {
 		log.Panic(err)
 	}

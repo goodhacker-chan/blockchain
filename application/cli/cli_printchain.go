@@ -1,14 +1,14 @@
 package cli
 
 import (
-	"blockchain/baseBlockchain"
+	"blockchain/base"
 	"fmt"
 	"strconv"
 )
 
 // 打印链
-func (cli *CLI) printChain() {
-	bc := baseBlockchain.NewBlockchain()
+func (cli *CLI) printChain(nodeID string) {
+	bc := base.NewBlockchain(nodeID)
 	defer bc.DB.Close()
 
 	bci := bc.Iterator()
@@ -17,8 +17,9 @@ func (cli *CLI) printChain() {
 		block := bci.Next()
 
 		fmt.Printf("============ 块 %x ============\n", block.Hash)
+		fmt.Printf("块高度: %d\n", block.Height)
 		fmt.Printf("上一个. 块: %x\n", block.PrevBlockHash)
-		pow := baseBlockchain.NewProofOfWork(block)
+		pow := base.NewProofOfWork(block)
 		fmt.Printf("散列: %s\n\n", strconv.FormatBool(pow.Validate()))
 		for _, tx := range block.Transactions {
 			fmt.Println(tx)

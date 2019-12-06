@@ -1,19 +1,19 @@
 package cli
 
 import (
-	"blockchain/baseBlockchain"
+	"blockchain/base"
 	"blockchain/tools"
 	"fmt"
 	"log"
 )
 
 // 创建钱包地址
-func (cli *CLI) getBalance(address string) {
-	if !baseBlockchain.ValidateAddress(address) {
+func (cli *CLI) getBalance(address, nodeID string) {
+	if !base.ValidateAddress(address) {
 		log.Panic("错误: 钱包地址无效")
 	}
-	bc := baseBlockchain.NewBlockchain()
-	UTXOSet := baseBlockchain.UTXOSet{bc}
+	bc := base.NewBlockchain(nodeID)
+	UTXOSet := base.UTXOSet{bc}
 	defer bc.DB.Close()
 
 	balance := 0

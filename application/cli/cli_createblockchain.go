@@ -1,21 +1,21 @@
 package cli
 
 import (
-	"blockchain/baseBlockchain"
+	"blockchain/base"
 	"fmt"
 	"log"
 )
 
 // 创建区块链
-func (cli *CLI) createBlockchain(address string) {
-	if !baseBlockchain.ValidateAddress(address) {
+func (cli *CLI) createBlockchain(address, nodeID string) {
+	if !base.ValidateAddress(address) {
 		log.Panic("错误: 地址无效")
 	}
 
-	bc := baseBlockchain.CreateBlockchain(address)
+	bc := base.CreateBlockchain(address, nodeID)
 	defer bc.DB.Close()
 
-	UTXOSet := baseBlockchain.UTXOSet{bc}
+	UTXOSet := base.UTXOSet{bc}
 	UTXOSet.Reindex()
 
 	fmt.Println("成功!")

@@ -1,15 +1,15 @@
 package cli
 
 import (
-	"blockchain/baseBlockchain"
+	"blockchain/base"
 	"fmt"
 )
 
 // 创建钱包地址
-func (cli *CLI) createWallet() {
-	wallets, _ := baseBlockchain.NewWallets()
+func (cli *CLI) createWallet(nodeID string) {
+	wallets, _ := base.NewWallets(nodeID)
 	address := wallets.CreateWallet()
-	wallets.SaveToFile()
+	wallets.SaveToFile(nodeID)
 
 	fmt.Printf("你的新地址: %s\n", address)
 }

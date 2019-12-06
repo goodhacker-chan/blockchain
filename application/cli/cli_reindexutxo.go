@@ -1,14 +1,14 @@
 package cli
 
 import (
-	"blockchain/baseBlockchain"
+	"blockchain/base"
 	"fmt"
 )
 
 // 重置未使用的块
-func (cli *CLI) reindexUTXO() {
-	bc := baseBlockchain.NewBlockchain()
-	UTXOSet := baseBlockchain.UTXOSet{bc}
+func (cli *CLI) reindexUTXO(nodeID string) {
+	bc := base.NewBlockchain(nodeID)
+	UTXOSet := base.UTXOSet{bc}
 	UTXOSet.Reindex()
 
 	count := UTXOSet.CountTransactions()

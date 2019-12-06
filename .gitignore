@@ -1,4 +1,5 @@
 .idea
-blockchain.DB.lock
-blockchain.DB
-wallet.dat
+*.lock
+*.DB
+*.dat
+./debug
