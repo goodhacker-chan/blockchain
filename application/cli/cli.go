@@ -21,8 +21,8 @@ func (cli *CLI) printUsage() {
 	fmt.Println("  printchain - 打印出区块链结构")
 	fmt.Println("  reindexutxo - 重新构建UTXO集")
 	//fmt.Println("  send -from FROM -to TO -amount AMOUNT - 交易发送给一个地址金币")
-	fmt.Println("  send -from FROM -to TO -amount AMOUNT -mine - 将一定数量的硬币从一个地址发送到另一个地址,在同一个节点上时设置 -mine(标志表示该块将被同一节点立即开采)")
-	fmt.Println("  startnode -miner ADDRESS - 启动具有在NODE_ID env中指定的ID的节点, -miner实现采矿")
+	fmt.Println("  send -from FROM -to TO -amount AMOUNT - 将一定数量的硬币从一个地址发送到另一个钱包地址")
+	fmt.Println("  startnode -miner ADDRESS - 启动矿工节点实现采矿")
 }
 
 // 验证参数
@@ -37,11 +37,7 @@ func (cli *CLI) validateArgs() {
 func (cli *CLI) Run() {
 	cli.validateArgs()
 
-	nodeID := os.Getenv("NODE_ID")
-	if nodeID == "" {
-		fmt.Printf("NODE_ID env 没有设置(终端中执行: export NODE_ID=3000(节点))!")
-		os.Exit(1)
-	}
+	nodeID := "3000"
 
 	getBalanceCmd := flag.NewFlagSet("getbalance", flag.ExitOnError)
 	createBlockchainCmd := flag.NewFlagSet("createblockchain", flag.ExitOnError)
@@ -149,7 +145,7 @@ func (cli *CLI) Run() {
 	}
 
 	if startNodeCmd.Parsed() {
-		nodeID := os.Getenv("NODE_ID")
+		//nodeID := os.Getenv("NODE_ID")
 		if nodeID == "" {
 			startNodeCmd.Usage()
 			os.Exit(1)

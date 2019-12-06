@@ -2,6 +2,7 @@ package base
 
 // 区块链网络
 import (
+	"blockchain/tools"
 	"bytes"
 	"encoding/gob"
 	"encoding/hex"
@@ -19,9 +20,10 @@ const mempoolLength = 1	// 内存池大小, 达到这个数量后矿工将会挖
 
 var nodeAddress string                      // 节点地址
 var miningAddress string                    // 矿工节点地址
-var KnownNodes = []string{"localhost:3000"} // 已知节点地址
+var KnownNodes = []string{""} // 已知节点地址
 var blocksInTransit = [][]byte{}
 var mempool = make(map[string]Transaction) // 内存池
+var Ip string
 
 
 // 地址
@@ -60,6 +62,12 @@ type verzion struct {
 	Version    int
 	BestHeight int
 	AddrFrom   string
+}
+
+func init()  {
+	Ip = tools.GetLocalIp()
+	KnownNodes[0] = Ip
+	fmt.Printf("节点地址: %s:3000 \n", Ip)
 }
 
 // 命令转换为字节
@@ -119,9 +127,11 @@ func sendBlock(addr string, b *Block) {
 
 // 发送数据
 func sendData(addr string, data []byte) {
+	addr = fmt.Sprintf("%s:3000", addr)
+	fmt.Println(addr)
 	conn, err := net.Dial(protocol, addr)
 	if err != nil {
-		fmt.Printf("%s 是不可用的\n", addr)
+		fmt.Printf("%s 是不可用的, err: %s\n", addr, err)
 		var updatedNodes []string
 
 		for _, node := range KnownNodes {
@@ -448,7 +458,7 @@ func handleConnection(conn net.Conn, bc *Blockchain) {
 
 // 开启一个节点
 func StartServer(nodeID, minerAddress string) {
-	nodeAddress = fmt.Sprintf("localhost:%s", nodeID)
+	nodeAddress = fmt.Sprintf("%s:%s", Ip, nodeID)
 	miningAddress = minerAddress
 	ln, err := net.Listen(protocol, nodeAddress)
 	if err != nil {
